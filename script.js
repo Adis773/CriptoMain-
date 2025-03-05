@@ -241,3 +241,24 @@ document.getElementById("withdrawButton").addEventListener("click", () => {
         alert(data.message);
     });
 });
+document.getElementById("vip-btn").addEventListener("click", function() {
+    window.location.href = "https://kaspi.kz"; // Оплата через Kaspi
+});
+
+document.getElementById("withdraw-btn").addEventListener("click", function() {
+    let username = prompt("Введите ваш логин:");
+    let amount = prompt("Сколько вывести?");
+    let method = prompt("Вывести на (monero/kaspi/halyk)?");
+
+    fetch("https://criptomain.onrender.com/withdraw", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: username, amount: amount, method: method })
+    }).then(response => response.json())
+      .then(data => alert(data.message));
+});
+
+document.getElementById("mine-btn").addEventListener("click", function() {
+    alert("Майнинг запущен!");
+    startMining();
+});
