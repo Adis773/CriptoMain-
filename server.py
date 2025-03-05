@@ -36,3 +36,24 @@ def buy_vip():
     user = request.json["user"]
     vip_users.add(user)
     return jsonify({"message": "Вы стали VIP! Доход x2"})
+    referrals = {}  # Кто кого пригласил
+
+@app.route("/set_referral", methods=["POST"])
+def set_referral():
+    user = request.json["user"]
+    referrer = request.json["referrer"]
+    referrals[user] = referrer
+    return jsonify({"message": f"Вы привязаны к {referrer}!"})
+
+@app.route("/earn", methods=["POST"])
+def earn():
+    user = request.json["user"]
+    amount = 2 if user in vip_users else 1  # VIP x2
+    balances[user] += amount
+
+    # Начисление рефералу 1% от дохода
+    if user in referrals:
+        referrer = referrals[user]
+        balances[referrer] += 0.01 * amount
+
+    return jsonify({"message": "Доход засчитан!", "balance": balances[user]})
