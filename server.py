@@ -57,3 +57,15 @@ def earn():
         balances[referrer] += 0.01 * amount
 
     return jsonify({"message": "Доход засчитан!", "balance": balances[user]})
+@app.route("/pay_vip", methods=["POST"])
+def pay_vip():
+    user = request.json["user"]
+    amount = request.json["amount"]
+    payment_method = request.json["method"]  # Kaspi или Halyk
+
+    # Эмулируем успешный платеж (нужно заменить на API Kaspi/Halyk)
+    if amount >= 10:  # Цена VIP
+        vip_users.add(user)
+        return jsonify({"message": "Вы стали VIP!"})
+    else:
+        return jsonify({"error": "Недостаточная сумма!"}), 400
