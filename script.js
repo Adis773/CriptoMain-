@@ -85,3 +85,57 @@ document.getElementById("withdrawButton").addEventListener("click", () => {
         alert(data.message || data.error);
     });
 });
+document.getElementById("mineButton").addEventListener("click", (e) => {
+    for (let i = 0; i < 5; i++) {
+        let coin = document.createElement("div");
+        coin.classList.add("coin");
+        coin.style.left = (e.clientX + Math.random() * 100 - 50) + "px";
+        coin.style.top = (e.clientY - 50) + "px";
+        document.body.appendChild(coin);
+        setTimeout(() => coin.remove(), 2000);
+    }
+});
+document.getElementById("inviteButton").addEventListener("click", () => {
+    let link = `${SERVER_URL}/invite/${user}`;
+    navigator.clipboard.writeText(link);
+    alert("Реферальная ссылка скопирована!");
+});
+document.getElementById("bonusButton").addEventListener("click", () => {
+    fetch(SERVER_URL + "/bonus", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user })
+    }).then(response => response.json()).then(data => {
+        alert(data.message || data.error);
+    });
+});
+function updateLeaderboard() {
+    fetch(SERVER_URL + "/leaderboard")
+        .then(response => response.json())
+        .then(data => {
+            let leaderboard = document.getElementById("leaderboard");
+            leaderboard.innerHTML = "";
+            data.leaders.forEach(([user, balance], index) => {
+                leaderboard.innerHTML += `<p>${index + 1}. ${user}: ${balance} XMR</p>`;
+            });
+        });
+}
+setInterval(updateLeaderboard, 60000);  // Обновляем каждую минуту
+document.getElementById("mineButton").addEventListener("click", () => {
+    let btn = document.getElementById("mineButton");
+    btn.style.transform = "scale(0.9)";
+    setTimeout(() => btn.style.transform = "scale(1)", 100);
+});
+document.getElementById("withdrawButton").addEventListener("click", () => {
+    let amount = prompt("Введите сумму вывода:");
+    let wallet = prompt("Введите кошелек (BTC, ETH или TON):");
+    let currency = prompt("Выберите валюту (BTC, ETH, TON):");
+
+    fetch(SERVER_URL + "/withdraw", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user, amount, wallet, currency })
+    }).then(response => response.json()).then(data => {
+        alert(data.message || data.error);
+    });
+});
