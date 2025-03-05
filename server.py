@@ -69,3 +69,27 @@ def pay_vip():
         return jsonify({"message": "Вы стали VIP!"})
     else:
         return jsonify({"error": "Недостаточная сумма!"}), 400
+import requests
+
+TON_API_KEY = "7627103721:AAFGrhtxx8ZD9KcNKhIZOPqTXM9EjJV1nB8"
+TON_WALLET="UQDrILjKb9MOeJfbeTuba3YxQNIbpvSYz_93arukX4Ek1tuI"
+
+@app.route("/withdraw", methods=["POST"])
+def withdraw():
+    user = request.json["user"]
+    amount = balances.get(user, 0)
+    
+    if amount < 1:  # Минимальный вывод
+        return jsonify({"error": "Недостаточно средств!"}), 400
+
+    # Запрос на вывод через Telegram-бот
+    response = requests.post(f"https://api.telegram.org/bot{TON_API_KEY}/sendMessage", json={
+        "chat_id": user,  # ID кошелька (добавить систему привязки)
+        "text": f"Ваши {amount} TON отправлены!"
+    })
+
+    if response.status_code == 200:
+        balances[user] = 0  # Обнуляем баланс после вывода
+        return jsonify({"message": "Вывод успешен!"})
+    else:
+        return jsonify({"error": "Ошибка при выводе!"}), 500
