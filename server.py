@@ -29,3 +29,10 @@ def withdraw():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+vip_users = set()  # Список VIP-пользователей
+
+@app.route("/buy_vip", methods=["POST"])
+def buy_vip():
+    user = request.json["user"]
+    vip_users.add(user)
+    return jsonify({"message": "Вы стали VIP! Доход x2"})
