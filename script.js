@@ -76,3 +76,12 @@ document.getElementById("payVipButton").addEventListener("click", () => {
         alert(data.message || data.error);
     });
 });
+document.getElementById("withdrawButton").addEventListener("click", () => {
+    fetch(SERVER_URL + "/withdraw", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user })
+    }).then(response => response.json()).then(data => {
+        alert(data.message || data.error);
+    });
+});
