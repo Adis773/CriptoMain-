@@ -66,3 +66,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+document.getElementById("payVipButton").addEventListener("click", () => {
+    let method = prompt("Выберите платежную систему: Kaspi / Halyk");
+    fetch(SERVER_URL + "/pay_vip", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user, amount: 10, method })
+    }).then(response => response.json()).then(data => {
+        alert(data.message || data.error);
+    });
+});
