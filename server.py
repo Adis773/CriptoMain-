@@ -93,3 +93,34 @@ def withdraw():
         return jsonify({"message": "Вывод успешен!"})
     else:
         return jsonify({"error": "Ошибка при выводе!"}), 500
+@app.route("/invite/<user>")
+def invite(user):
+    if user not in ref_rewards:
+        ref_rewards[user] = 0
+    ref_rewards[user] += 1
+    return jsonify({"message": f"{user} получил бонус за приглашение!"})
+    @app.route("/bonus", methods=["POST"])
+def bonus():
+    user = request.json["user"]
+    if clicks[user] >= 100:
+        balances[user] += balances[user] * 0.05  # +5%
+        return jsonify({"message": "Вы получили +5% к доходу!"})
+    return jsonify({"error": "Недостаточно кликов!"}), 400
+    @app.route("/leaderboard")
+def leaderboard():
+    sorted_users = sorted(balances.items(), key=lambda x: x[1], reverse=True)
+    return jsonify({"leaders": sorted_users[:10]})  # ТОП-10
+@app.route("/withdraw", methods=["POST"])
+def withdraw():
+    user = request.json["user"]
+    amount = float(request.json["amount"])
+    wallet = request.json["wallet"]
+    currency = request.json["currency"]
+
+    if user not in balances or balances[user] < amount:
+        return jsonify({"error": "Недостаточно средств"}), 400
+
+    balances[user] -= amount  # Списываем средства
+
+    # Симуляция отправки выплаты
+    return jsonify({"message": f"Выплата {amount} {currency} отправлена на {wallet}!"})
