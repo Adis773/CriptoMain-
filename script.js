@@ -200,3 +200,44 @@ function spawnCoin() {
     setTimeout(() => coin.remove(), 1000);
 }
 document.getElementById("mineButton").addEventListener("click", spawnCoin);
+function updateLevel() {
+    fetch(SERVER_URL + "/update_level", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user })
+    }).then(response => response.json()).then(data => {
+        document.getElementById("userLevel").innerText = "Ваш уровень: " + data.level;
+    });
+}
+setInterval(updateLevel, 60000);
+document.getElementById("dailyQuestButton").addEventListener("click", () => {
+    fetch(SERVER_URL + "/daily_quest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user })
+    }).then(response => response.json()).then(data => {
+        alert(data.message);
+    });
+});
+document.getElementById("buyVipButton").addEventListener("click", () => {
+    let amount = prompt("Введите сумму (мин. 5$):");
+    fetch(SERVER_URL + "/buy_vip", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user, amount })
+    }).then(response => response.json()).then(data => {
+        alert(data.message);
+    });
+});
+document.getElementById("withdrawButton").addEventListener("click", () => {
+    let wallet = prompt("Введите ваш XMR-кошелёк:");
+    let amount = prompt("Введите сумму:");
+
+    fetch(SERVER_URL + "/withdraw", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user, wallet, amount })
+    }).then(response => response.json()).then(data => {
+        alert(data.message);
+    });
+});
