@@ -124,3 +124,62 @@ def withdraw():
 
     # Симуляция отправки выплаты
     return jsonify({"message": f"Выплата {amount} {currency} отправлена на {wallet}!"})
+    vip_users = {}
+
+@app.route("/buy_vip", methods=["POST"])
+def buy_vip():
+    user = request.json["user"]
+    cost = 0.01  # Цена VIP (в XMR)
+
+    if balances.get(user, 0) < cost:
+        return jsonify({"error": "Недостаточно средств"}), 400
+
+    balances[user] -= cost
+    vip_users[user] = True
+    return jsonify({"message": "Поздравляем! Вы стали VIP!"})
+    achievements = {
+    "first_click": "Первая монетка!",
+    "100_clicks": "100 монет!",
+    "1_xmr": "Ты добыл 1 XMR!"
+}
+
+user_achievements = {}
+
+@app.route("/get_achievements")
+def get_achievements():
+    return jsonify(user_achievements.get(request.args["user"], []))
+    messages = []
+
+@app.route("/send_message", methods=["POST"])
+def send_message():
+    user = request.json["user"]
+    text = request.json["text"]
+    
+    messages.append(f"{user}: {text}")
+    if len(messages) > 20:  # Храним только 20 сообщений
+        messages.pop(0)
+    
+    return jsonify({"status": "OK"})
+
+@app.route("/get_messages")
+def get_messages():
+    return jsonify({"messages": messages})
+    referrals = {}
+
+@app.route("/add_referral", methods=["POST"])
+def add_referral():
+    user = request.json["user"]
+    referrer = request.json["referrer"]
+
+    if user in referrals:
+        return jsonify({"error": "Реферал уже добавлен"}), 400
+
+    referrals[user] = referrer
+    balances[referrer] += 0.001  # Бонус за приглашение
+
+    return jsonify({"message": "Реферал добавлен, бонус начислен!"})
+    @app.route("/leaderboard")
+def leaderboard():
+    top_players = sorted(balances.items(), key=lambda x: x[1], reverse=True)[:10]
+    return jsonify({"leaderboard": top_players})
+    
