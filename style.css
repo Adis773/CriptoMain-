@@ -1,0 +1,41 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: linear-gradient(45deg, #1a1a1a, #333333);
+    color: white;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.container {
+    margin-top: 100px;
+}
+
+button {
+    background-color: gold;
+    border: none;
+    padding: 15px;
+    font-size: 20px;
+    cursor: pointer;
+    margin-top: 10px;
+    border-radius: 10px;
+    transition: transform 0.2s ease;
+}
+
+button:hover {
+    transform: scale(1.1);
+}
+
+.coin {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: url('https://i.imgur.com/w1i6Ktc.png') no-repeat center/contain;
+    animation: fall 1.5s linear forwards;
+}
+
+@keyframes fall {
+    0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(500px) rotate(360deg); opacity: 0; }
+}
