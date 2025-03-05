@@ -182,4 +182,55 @@ def add_referral():
 def leaderboard():
     top_players = sorted(balances.items(), key=lambda x: x[1], reverse=True)[:10]
     return jsonify({"leaderboard": top_players})
+    levels = {}
+
+@app.route("/update_level", methods=["POST"])
+def update_level():
+    user = request.json["user"]
+    balance = balances.get(user, 0)
+
+    if balance >= 10:
+        levels[user] = "💎 Алмазный"
+    elif balance >= 5:
+        levels[user] = "🔥 Золотой"
+    elif balance >= 2:
+        levels[user] = "🥈 Серебряный"
+    else:
+        levels[user] = "🥉 Бронзовый"
+
+    return jsonify({"level": levels[user]})
+daily_quests = {}
+
+@app.route("/daily_quest", methods=["POST"])
+def daily_quest():
+    user = request.json["user"]
+    if daily_quests.get(user, False):
+        return jsonify({"message": "Вы уже выполнили квест сегодня!"})
     
+    balances[user] += 0.002  # Бонус за выполнение
+    daily_quests[user] = True
+
+    return jsonify({"message": "Квест выполнен! Бонус зачислен."})
+    vip_users = {}
+
+@app.route("/buy_vip", methods=["POST@app.route("/withdraw", methods=["POST"])
+def withdraw():
+    user = request.json["user"]
+    wallet = request.json["wallet"]
+    amount = request.json["amount"]
+
+    if balances.get(user, 0) >= amount:
+        balances[user] -= amount
+        return jsonify({"message": f"Выплата {amount} XMR отправлена на {wallet}!"})
+    else:
+        return jsonify({"message": "Недостаточно средств!"})"])
+def buy_vip():
+    user = request.json["user"]
+    amount = request.json["amount"]
+
+    if amount >= 5:  # VIP-статус за 5$
+        vip_users[user] = True
+        return jsonify({"message": "VIP активирован! Бонус: +10% к майнингу"})
+    else:
+        return jsonify({"message": "Минимальная сумма для VIP — 5$!"})
+        
