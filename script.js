@@ -139,3 +139,64 @@ document.getElementById("withdrawButton").addEventListener("click", () => {
         alert(data.message || data.error);
     });
 });
+document.getElementById("buyVipButton").addEventListener("click", () => {
+    fetch(SERVER_URL + "/buy_vip", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user })
+    }).then(response => response.json()).then(data => {
+        alert(data.message || data.error);
+    });
+});
+function loadAchievements() {
+    fetch(SERVER_URL + "/get_achievements?user=" + user)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("achievements").innerHTML = data.map(a => `<p>🏆 ${a}</p>`).join("");
+        });
+}
+setInterval(loadAchievements, 30000);  // Обновляем каждыfunction updateChat() {
+    fetch(SERVER_URL + "/get_messages")
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("chatBox").innerHTML = data.messages.map(m => `<p>${m}</p>`).join("");
+        });
+}
+setInterval(updateChat, 5000);  // Обновляем чат каждые 5 секунд
+
+document.getElementById("sendMessageButton").addEventListener("click", () => {
+    let message = document.getElementById("chatInput").value;
+    fetch(SERVER_URL + "/send_message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user, text: message })
+    });
+});е 30 секунд
+document.getElementById("referralButton").addEventListener("click", () => {
+    let referrer = document.getElementById("referralInput").value;
+    fetch(SERVER_URL + "/add_referral", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user, referrer })
+    }).then(response => response.json()).then(data => {
+        alert(data.message || data.error);
+    });
+});
+function updateLeaderboard() {
+    fetch(SERVER_URL + "/leaderboard")
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("leaderboard").innerHTML = data.leaderboard.map(
+                (p, i) => `<p>${i + 1}. ${p[0]}: ${p[1].toFixed(4)} XMR</p>`
+            ).join("");
+        });
+}
+setInterval(updateLeaderboard, 60000);  // Обновляем раз в минуту
+function spawnCoin() {
+    let coin = document.createElement("div");
+    coin.className = "coin";
+    coin.style.left = Math.random() * window.innerWidth + "px";
+    document.body.appendChild(coin);
+    setTimeout(() => coin.remove(), 1000);
+}
+document.getElementById("mineButton").addEventListener("click", spawnCoin);
