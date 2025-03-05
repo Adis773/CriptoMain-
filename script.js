@@ -52,3 +52,12 @@ document.getElementById("withdrawButton").addEventListener("click", () => {
         alert(data.message);
     });
 });
+document.getElementById("buyVipButton").addEventListener("click", () => {
+    fetch("http://YOUR_SERVER_IP:5000/buy_vip", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user })
+    }).then(response => response.json()).then(data => {
+        alert(data.message);
+    });
+});
