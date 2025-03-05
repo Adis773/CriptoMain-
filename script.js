@@ -22,3 +22,33 @@ function createCoin() {
 document.getElementById("vipButton").addEventListener("click", () => {
     window.location.href = "https://kaspi.kz/pay"; // Здесь будет реальная ссылка
 });
+const user = "user123"; // Можно сделать регистрацию
+
+// Регистрируем пользователя
+fetch("https://criptomain.onrender.com", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user })
+});
+
+// Засчитываем клики
+document.getElementById("clickButton").addEventListener("click", () => {
+    fetch("https://ТВОЙ_URL_ОТ_RENDER/earn", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user })
+    }).then(response => response.json()).then(data => {
+        console.log(data);
+    });
+});
+
+// Кнопка вывода средств
+document.getElementById("withdrawButton").addEventListener("click", () => {
+    fetch("https://ТВОЙ_URL_ОТ_RENDER/withdraw", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user })
+    }).then(response => response.json()).then(data => {
+        alert(data.message);
+    });
+});
